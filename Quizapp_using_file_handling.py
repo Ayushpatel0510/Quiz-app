@@ -1,10 +1,5 @@
-total_pricemoney=0
-a=0
-b=4
-c=0
-next_question=True
-    
 def show_profile():
+  
   with open("registration_details.txt","r")as show:
     pf=show.readlines()
   profile=[]
@@ -18,6 +13,7 @@ def show_profile():
   print()
   input("Press Enter to go back to MENU ")
   menu()
+
         
 def attempt_quiz():
     while(c<7 and next_question==True):
@@ -30,15 +26,18 @@ def attempt_quiz():
         answers()
         if(c==7):
          print("\nGAME END\n")
+    input("Press Enter to go back to MENU ")
     menu()
+
          
 def show_result():#THIS FUNCTIONS DISPLAYS RESULT
     print("\nRESULT:\n")
-    print(f"Questions correctly answered by the user: {c}")
+    print(f"Questions correctly answered by the user: {answer_count}")
     print(f"Total amount won by the user: {total_pricemoney}")
     print()
     input("Press Enter to go back to MENU ")
     menu()
+
             
 def logout():
     with open("logs.txt","w") as logs:
@@ -46,13 +45,34 @@ def logout():
         logs.write(f"logged_user=None")
     print("Logged Out Successfully")
 
+
 def registration(): # THIS FUNCTION TAKES THE USER'S DETAILS AND STORES THEM IN FILES 
-    print("REGISTRATION PAGE:")
+    with open("login_details.txt","r") as log:
+            cred=log.readlines()
+    credential=[]
+    user=[]
+    
+    for str in cred:
+        x=str.split("-")
+        un_pass=x[1].replace("\n","")   #THIS LOOP FORMATS AND STORES THE USERNAME AND PASSWORD IN A SINGLE LIST
+        credential.append(un_pass)
+        
+    for index in range(0,len(credential)):
+        if index%2==0:                     #THIS LOOP STORES USERNAME IN DIFFERENT LIST
+            user.append(credential[index])
+    
+    print("\nREGISTRATION PAGE:")
     uname=input("enter your username: ").lower()
+    
+    while uname in user:
+        print("\nUsername already exists")
+        uname=input("enter your username: ").lower()
+        
     pword=input("enter your password: ").lower()
     name=input("Enter your name:").title()
     enroll=input("Enter your enrollment number:").upper()
     branch=input("Enter your Branch:").upper()
+    
     with open("registration_details.txt","a") as reg:
         reg.write(f"\nUsername-{uname}\n")   
         reg.write(f"Password-{pword}\n")   
@@ -66,7 +86,8 @@ def registration(): # THIS FUNCTION TAKES THE USER'S DETAILS AND STORES THEM IN 
         
     print("Registration Successfull")
     login()
-    
+
+   
 def login():# THIS FUNCTION LOGINS USER
     with open("login_details.txt","r") as log:
             cred=log.readlines()
@@ -86,30 +107,33 @@ def login():# THIS FUNCTION LOGINS USER
             password.append(credential[index])
             
     print("LOGIN PAGE:")
+    global logged_user
     uname=input("enter username: ").lower()
     if uname in user:
      name_index=user.index(uname)
-     pword=input("enter password: ").lower() #PASSWORD IS ASKED ONLY IF USERNAME IS CORRECT 
+     pword=input("enter password: ").lower() #PASSWORD IS ASKED ONLY IF USERNAME IS CORRECT
+     while(pword != password[name_index]):
+         print("Incorrect Password\n")
+         pword=input("enter password again: ").lower()
      if pword==password[name_index]:
          print("Login Successfull\n")
-        
+         logged_user=uname
          with open("logs.txt","w") as logs:
-             logs.write(f"login_status=True\n") #THIS BLOCK UPDATES THE LOGS FILE
+             logs.write("login_status=True\n") #THIS BLOCK UPDATES THE LOGS FILE
              logs.write(f"logged_user={uname}")
              
          menu()
          
-     else:
-         print("Incorrect Password")
-         login()
     else:
      print("user not found")
      registration()
+
     
 def reward(answerpricemoney): #THIS FUNCTION INCREMENTS THE PRIZE MONEY
      global total_pricemoney 
      total_pricemoney =total_pricemoney + answerpricemoney 
-         
+
+        
 def question(): 
     global a,b,c
     i=1
@@ -138,7 +162,7 @@ def question():
     b=b+4
     
 def answers():
-    global next_question,c
+    global answer_count,next_question,c
     answer_pricemoney_list=[10000,20000,50000,100000,500000,1000000,3000000]
     
     with open("answers.txt","r") as ans:
@@ -161,9 +185,17 @@ def answers():
         print("Your answer is INCORRECT.")
         print("GAME OVER!!!!")
         next_question=False
+        input("Press Enter to go back to MENU ")
         menu()
+    answer_count=c
+
 
 def menu():#THIS FUNCTION SHOWS THE MENU OF WHEN A USER IS ALREADY LOGGED IN
+    global next_question,a,b,c
+    next_question=True
+    c=0
+    a=0
+    b=4
     print("MENU".center(20,"*"))
     print()
     print("1.Attempt Quiz")
@@ -173,12 +205,15 @@ def menu():#THIS FUNCTION SHOWS THE MENU OF WHEN A USER IS ALREADY LOGGED IN
     action=input("Enter your choice: ").title()
     if action=="Attempt Quiz" or action=="1":
         attempt_quiz()
-    if action=="Show Profile" or action=="2":
+    elif action=="Show Profile" or action=="2":
         show_profile() 
-    if action=="Show Result" or action=="3":
+    elif action=="Show Result" or action=="3":
         show_result()
-    if action=="Logout" or action=="4":
+    elif action=="Logout" or action=="4":
         logout()
+    else:
+        print("Invalid Input")
+
         
 def menu2():#THIS FUNCTIONS SHOWS THE MENU OF WHEN NO USER IS ALREADY LOGGED IN
     print("Select User Type:")
@@ -189,7 +224,13 @@ def menu2():#THIS FUNCTIONS SHOWS THE MENU OF WHEN NO USER IS ALREADY LOGGED IN
         registration()
     if choice=="2" or choice=="EXISTING USER":
         login()
-        
+
+total_pricemoney=0
+a=0
+b=4
+c=0
+next_question=True
+answer_count=0        
 print("WELCOME TO THE QUIZ GAME".center(50,"_"))
 print()
 with open("logs.txt","r")as logs:

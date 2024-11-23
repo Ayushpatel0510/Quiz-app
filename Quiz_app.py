@@ -1,11 +1,3 @@
-total_pricemoney=0
-a=0
-b=4
-c=0
-next_question=True
-user=["yash","ayush"]
-password=["yash123","ayush123"]
-
 def registration(): # THIS FUNCTION REGISTERS USER
     print("REGISTRATION PAGE:")
     uname=input("enter your username: ").lower()
@@ -24,7 +16,10 @@ def login():# THIS FUNCTION LOGINS USER
     uname=input("enter username: ").lower()
     if uname in user:
      name_index=user.index(uname)
-     pword=input("enter password: ").lower() #PASSWORD IS ASKED ONLY IF USERNAME IS CORRECT 
+     pword=input("enter password: ").lower() #PASSWORD IS ASKED ONLY IF USERNAME IS CORRECT
+     while(pword != password[name_index]):
+         print("Incorrect Password\n")
+         pword=input("enter password again: ").lower()
      if pword==password[name_index]:
          print("Login Successfull")
          while(c<7 and next_question==True):
@@ -35,9 +30,7 @@ def login():# THIS FUNCTION LOGINS USER
           answers()
           if(c==7):
            print("GAME END")
-     else:
-         print("Incorrect Password")
-         login()
+    
     else:
      print("user not found")
      registration()
@@ -82,6 +75,14 @@ def answers():
         print(f"Your total price money is {total_pricemoney} Rupees",end="\n\n" )
 
         next_question=False
+
+total_pricemoney=0
+a=0
+b=4
+c=0
+next_question=True
+user=["yash","ayush"]
+password=["yash123","ayush123"]
 print("WELCOME TO THE QUIZ GAME".center(50,"*"))      
 print("You are a:")
 print("1. NEW USER")
