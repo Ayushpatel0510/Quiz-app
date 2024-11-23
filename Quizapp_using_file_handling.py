@@ -174,7 +174,7 @@ def answers():
   
     user_answer=input("enter your answer: ").title() #TAKES USER'S ANSWER
     if user_answer=="Quit":
-        menu()
+        next_question=False
     elif(user_answer==correct_answers[c]):
         reward(answer_pricemoney_list[c])#CALLS THE reward() FUNCTION
         print("Your answer is CORRECT.")
@@ -185,8 +185,7 @@ def answers():
         print("Your answer is INCORRECT.")
         print("GAME OVER!!!!")
         next_question=False
-        input("Press Enter to go back to MENU ")
-        menu()
+        
     answer_count=c
 
 
